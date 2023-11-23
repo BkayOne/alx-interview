@@ -1,20 +1,23 @@
 #!/usr/bin/python3
 """
-fewest coins challenge.
+Interview Question on: fewest number of coins needed to
+meet a given amount total
 """
 
 
 def makeChange(coins, total):
-    """Determines the fewest number of coins needed to meet a given
-    amount total when given a pile of coins of different values.
-    """
+    """ fewest number of coins needed to meet total """
+    if total <= 0:
+        return 0
+    # sort the coins in descending order
     coins.sort(reverse=True)
-    coins_count = 0
-
+    change = 0
     for coin in coins:
         if total <= 0:
             break
-        coins_count += total // coin
-        total %= coin
-
-    return coins_count if total == 0 else -1
+        temp = total // coin
+        change += temp
+        total -= (temp * coin)
+    if total != 0:
+        return -1
+    return change
