@@ -1,27 +1,31 @@
 #!/usr/bin/python3
-
-"""Prime Game Algorithm Module"""
+"""
+this module defines the prime game program
+"""
 
 
 def isWinner(x, nums):
-    """Check who is the winner of the prime game"""
-    ben = 0
-    maria = 0
-
-    # Based on pattern discovered, ben always wins at a step of 3
-    # Then wins the next which is 4.
-    # Then the pattern repeats itself.
-
-    for i in range(x):
-        if nums[i] == 1:
-            ben += 1
-        elif nums[i] % 4 == 0 or nums[i] % 4 == 3:
-            ben += 1
-        else:
-            maria += 1
-    if ben > maria:
-        return 'Ben'
-    elif maria > ben:
-        return 'Maria'
-    else:
+    """Determines the winner of a prime game session with `x` rounds.
+    """
+    if x < 1 or not nums:
         return None
+    marias_wins, bens_wins = 0, 0
+    n = max(nums)
+    is_prime = [True] * (n + 1)
+    is_prime[0] = is_prime[1] = False
+    p = 2
+    while p * p <= n:
+        if is_prime[p]:
+            for i in range(p * p, n + 1, p):
+                is_prime[i] = False
+        p += 1
+
+    # Count primes less than or equal to n for each round
+    for _, n in zip(range(x), nums):
+        primes_count = sum(1 for i in range(2, n + 1) if is_prime[i])
+        bens_wins += primes_count % 2 == 0
+        marias_wins += primes_count % 2 == 1
+
+    if marias_wins == bens_wins:
+        return None
+    return 'Maria' if marias_wins > bens_wins else 'Ben'
